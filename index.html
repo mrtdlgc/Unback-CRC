@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Circles Backing Ledger</title>
+    <meta
+      name="description"
+      content="Look up any Circles CRC backing position on Gnosis Chain without a wallet, then withdraw it once the lock expires — including from a Safe multisig."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles/tokens.css" />
+    <link rel="stylesheet" href="/styles/base.css" />
+    <link rel="stylesheet" href="/styles/layout.css" />
+    <link rel="stylesheet" href="/styles/components.css" />
+    <script type="module" src="/src/main.js"></script>
+  </head>
+
+  <body>
+    <div class="page">
+      <header class="masthead">
+        <div class="masthead-top">
+          <div class="eyebrow">Circles &middot; Gnosis Chain</div>
+          <button class="btn-secondary theme-toggle" id="themeToggle" type="button">Theme: auto</button>
+        </div>
+
+        <h1>Backing Position Ledger</h1>
+        <p class="lede">
+          Look up any Circles CRC backing position by address — no wallet needed — then connect an
+          owner key only when it's time to withdraw.
+        </p>
+
+        <div class="lookup-bar">
+          <label class="visually-hidden" for="lookupInput">Safe or Circles avatar address</label>
+          <input
+            class="mono"
+            id="lookupInput"
+            type="text"
+            inputmode="text"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Safe / Circles avatar address (0x…)"
+          />
+          <button class="btn-primary" id="checkButton" type="button">Check status</button>
+        </div>
+        <p class="lookup-hint">
+          Reads go straight to public Gnosis Chain nodes. Nothing is sent anywhere until you choose
+          to sign a transaction below.
+        </p>
+      </header>
+
+      <main class="app" id="app">
+        <section class="card notice" id="emptyState">
+          Enter a Safe or Circles avatar address above to look up its backing position.
+        </section>
+
+        <section class="card notice" id="loadingState" aria-live="polite" hidden>
+          Reading the chain…
+        </section>
+
+        <section class="card notice" id="noBackingState" aria-live="polite" hidden>
+          No backing instance was found for
+          <span class="mono" id="noBackingAddress"></span> — this address hasn't backed its personal
+          CRC yet.
+          <div class="notice-actions">
+            <button class="btn-secondary btn-small" id="tryAnotherButton" type="button">
+              Try another address
+            </button>
+          </div>
+        </section>
+
+        <section class="card notice" id="pendingState" aria-live="polite" hidden>
+          A backing instance exists for this address, but the CoW Swap order hasn't settled into a
+          Balancer pool yet. Check back once the swap fills — <strong>the one-year lock only starts
+          once the pool is created.</strong>
+        </section>
+
+        <section class="card receipt" id="statusCard" hidden>
+          <div class="stamp" id="statusStamp">Locked</div>
+          <h2 class="visually-hidden">Position status</h2>
+          <dl class="ledger-facts" id="statusFacts"></dl>
+          <div class="countdown-row">
+            <span class="countdown-label" id="countdownLabel">Time remaining</span>
+            <span class="countdown-value" id="countdownValue">—</span>
+          </div>
+        </section>
+
+        <section class="card" id="returnsCard" hidden>
+          <h2>Expected on withdrawal</h2>
+          <p class="fine">
+            The position's live share of the Balancer pool. This moves with trading until the
+            position is actually redeemed.
+          </p>
+          <div class="ledger-table">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th scope="col">Token</th>
+                  <th scope="col" class="num">Amount</th>
+                </tr>
+              </thead>
+              <tbody id="returnsBody"></tbody>
+            </table>
+          </div>
+          <p class="share-note" id="shareNote"></p>
+        </section>
+
+        <section class="card" id="withdrawCard" hidden>
+          <h2>Withdraw</h2>
+          <p class="fine">
+            When the backer is a Safe, every action below is a real Safe transaction: connect an
+            owner key, approve on-chain, then anyone can execute once the threshold is met. Nothing
+            moves until the Safe's own rules are satisfied.
+          </p>
+
+          <div class="owner-connect-row">
+            <button class="btn-secondary" id="connectButton" type="button">
+              Connect owner wallet
+            </button>
+            <div class="wallet-info" id="walletInfo" hidden>
+              <span class="dot"></span>
+              <span id="walletAddress">—</span>
+              <span class="network-tag" id="networkTag">—</span>
+            </div>
+            <button class="btn-secondary btn-small" id="refreshButton" type="button">Refresh</button>
+            <div class="provider-picker" id="providerPicker" hidden></div>
+          </div>
+
+          <ol class="procedure">
+            <li class="step">
+              <div class="step-num">1</div>
+              <div class="step-body">
+                <h3>Release the pool tokens</h3>
+                <p>
+                  Calls <code class="mono">releaseBalancerPoolTokens</code>, sending the Balancer
+                  pool tokens from the backing instance to the backer.
+                </p>
+                <div class="safe-panel" id="releasePanel"></div>
+              </div>
+            </li>
+
+            <li class="step">
+              <div class="step-num">2</div>
+              <div class="step-body">
+                <h3>Approve the pool tokens</h3>
+                <p>
+                  A standard ERC-20 <code class="mono">approve</code>, letting the backing factory
+                  pull the pool tokens for redemption.
+                </p>
+                <div class="safe-panel" id="approvePanel"></div>
+              </div>
+            </li>
+
+            <li class="step">
+              <div class="step-num">3</div>
+              <div class="step-body">
+                <h3>Redeem for underlying tokens</h3>
+                <p>
+                  Calls <code class="mono">exitLBP</code> on the factory, exchanging the pool tokens
+                  for the backing asset and stable CRC — delivered straight back to the backer.
+                </p>
+                <div class="field">
+                  <label for="slippageInput">Max slippage</label>
+                  <input id="slippageInput" type="number" min="0" max="50" step="0.1" value="1" />
+                  <span aria-hidden="true">%</span>
+                </div>
+                <div class="safe-panel" id="exitPanel"></div>
+              </div>
+            </li>
+          </ol>
+        </section>
+
+        <section class="card" id="activityCard" hidden>
+          <h2>Activity</h2>
+          <ul class="log-list" id="activityList"></ul>
+        </section>
+
+        <section class="card" id="errorCard" role="alert" hidden>
+          <h2>Something went wrong</h2>
+          <ul class="log-list errors" id="errorList"></ul>
+        </section>
+      </main>
+
+      <footer class="fineprint">
+        This page talks directly to the contracts below through public RPC nodes and, when you
+        choose to act, your connected wallet — it never holds keys or funds. Verify everything
+        yourself on-chain before signing.<br />
+        Backing factory <code id="factoryLink">—</code>
+        &nbsp;·&nbsp; Balancer Vault <code id="vaultLink">resolved on load</code>
+      </footer>
+    </div>
+  </body>
+</html>

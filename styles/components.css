@@ -1,0 +1,494 @@
+/* Cards, status receipt, returns table, withdrawal steps, activity log. */
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+
+.card h2 {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.card .fine {
+  font-size: 13px;
+  color: var(--ink-faint);
+  margin: 0 0 18px;
+}
+
+.notice {
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: 14.5px;
+  padding: 34px 28px;
+}
+
+.notice strong {
+  color: var(--ink);
+}
+
+.notice-actions {
+  margin-top: 16px;
+}
+
+/* ---------- Status receipt ---------- */
+.receipt {
+  padding-top: 24px;
+}
+
+.stamp {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 2px;
+  border: 1.5px solid currentColor;
+  transform: rotate(2deg);
+}
+
+.stamp.locked {
+  color: var(--locked);
+  background: var(--locked-soft);
+}
+
+.stamp.ready {
+  color: var(--ready);
+  background: var(--ready-soft);
+}
+
+.stamp.released {
+  color: var(--released);
+  background: var(--released-soft);
+}
+
+.ledger-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 10px 20px;
+  margin: 0 0 20px;
+  max-width: 540px;
+}
+
+.ledger-facts > div {
+  display: contents;
+}
+
+.ledger-facts dt {
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding-top: 2px;
+  white-space: nowrap;
+}
+
+.ledger-facts dd {
+  margin: 0;
+  font-size: 14px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.countdown-row {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--line-strong);
+  flex-wrap: wrap;
+}
+
+.countdown-label {
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.countdown-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.countdown-value.ready-text {
+  color: var(--ready);
+}
+
+/* ---------- Returns table ---------- */
+.ledger-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14.5px;
+}
+
+table.tbl th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 0 0 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+table.tbl th.num,
+table.tbl td.num {
+  text-align: right;
+}
+
+table.tbl td {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+table.tbl tr:last-child td {
+  border-bottom: none;
+}
+
+table.tbl td.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+.token-name {
+  font-weight: 600;
+}
+
+.token-addr {
+  font-size: 12px;
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+}
+
+.share-note {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  margin-top: 14px;
+}
+
+/* ---------- Wallet row ---------- */
+.owner-connect-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px 0 18px;
+  border-bottom: 1px dashed var(--line-strong);
+  margin-bottom: 18px;
+}
+
+.wallet-info {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  padding: 7px 11px;
+  background: var(--bg-inset);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ready);
+  box-shadow: 0 0 0 3px var(--ready-soft);
+  flex-shrink: 0;
+}
+
+.network-tag {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  border-left: 1px solid var(--line);
+  padding-left: 9px;
+}
+
+.network-tag.wrong {
+  color: var(--danger);
+}
+
+.provider-picker {
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.provider-picker .picker-title {
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.provider-picker .picker-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Withdrawal procedure ---------- */
+.procedure {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.step {
+  display: flex;
+  gap: 18px;
+  padding: 22px 0;
+}
+
+.step + .step {
+  border-top: 1px dashed var(--line-strong);
+}
+
+.step-num {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.step-body h3 {
+  font-size: 15.5px;
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+
+.step-body p {
+  margin: 0 0 12px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.safe-panel {
+  background: var(--bg-inset);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  margin-top: 6px;
+}
+
+.safe-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.safe-panel-title {
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.owner-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.owner-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.approval-pill {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  border: 1.5px solid var(--line-strong);
+  color: transparent;
+}
+
+.approval-pill.yes {
+  background: var(--ready-soft);
+  border-color: var(--ready);
+  color: var(--ready);
+}
+
+.approval-pill.self {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  border-style: dashed;
+}
+
+.owner-tag {
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+}
+
+.safe-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hint {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  margin: 8px 0 0;
+}
+
+.hint:empty {
+  margin: 0;
+}
+
+.hint.warn {
+  color: var(--locked);
+}
+
+.hint.ok {
+  color: var(--ready);
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.field label {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.field input {
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  padding: 9px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  color: var(--ink);
+  width: 90px;
+}
+
+/* ---------- Activity / errors ---------- */
+.log-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.log-list li {
+  font-size: 13px;
+  font-family: var(--font-mono);
+  padding: 9px 12px;
+  background: var(--bg-inset);
+  border-radius: var(--radius-sm);
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.log-list.errors li {
+  background: var(--locked-soft);
+  color: var(--locked);
+  font-family: var(--font-ui);
+}
+
+.log-list a {
+  color: inherit;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 520px) {
+  .card {
+    padding: 20px;
+  }
+
+  .stamp {
+    position: static;
+    display: inline-block;
+    margin-bottom: 16px;
+    transform: none;
+  }
+
+  .step {
+    flex-direction: column;
+  }
+
+  .ledger-facts {
+    grid-template-columns: 1fr;
+    gap: 2px 0;
+  }
+
+  .ledger-facts dd {
+    margin-bottom: 10px;
+  }
+}

@@ -1,0 +1,88 @@
+/*
+ * Design tokens.
+ *
+ * Three theme states have to be covered, because "system" stamps nothing on
+ * the root element: bare :root is the complete light palette, the
+ * prefers-color-scheme block covers system-dark, and the [data-theme] blocks
+ * let an explicit user choice win in either direction.
+ */
+
+:root {
+  --bg: #eef0ef;
+  --bg-inset: #e3e5e2;
+  --paper: #f8f8f6;
+  --ink: #1c1f1e;
+  --ink-soft: #52585a;
+  --ink-faint: #868d8d;
+  --line: #d3d5d0;
+  --line-strong: #b7bab3;
+  --accent: #7a6428;
+  --accent-ink: #4d3f19;
+  --accent-soft: #efe6cd;
+  --accent-contrast: #f8f8f6;
+  --locked: #b0490f;
+  --locked-soft: #f7e6da;
+  --ready: #17693f;
+  --ready-soft: #dcefe2;
+  --released: #33587a;
+  --released-soft: #dfe7ee;
+  --danger: #b0301f;
+  --shadow: 0 1px 2px rgba(20, 22, 20, 0.06), 0 8px 24px -12px rgba(20, 22, 20, 0.18);
+
+  --font-display: "Iowan Old Style", "Sitka Display", "Palatino Linotype", Palatino, Georgia, "Noto Serif", serif;
+  --font-ui: "Neue Haas Grotesk Text", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+
+  --radius: 4px;
+  --radius-sm: 3px;
+  --page-width: 780px;
+}
+
+/* Dark palette, shared by system-dark and the explicit dark choice. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171a;
+    --bg-inset: #0f1113;
+    --paper: #1b1f22;
+    --ink: #ecebe4;
+    --ink-soft: #aab0ab;
+    --ink-faint: #767e78;
+    --line: #2e332f;
+    --line-strong: #3d4340;
+    --accent: #d9b968;
+    --accent-ink: #f0dca4;
+    --accent-soft: #33301f;
+    --accent-contrast: #1a1608;
+    --locked: #e08249;
+    --locked-soft: #3a2417;
+    --ready: #5cc491;
+    --ready-soft: #16301f;
+    --released: #86aed4;
+    --released-soft: #1b2733;
+    --danger: #e0725f;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px -14px rgba(0, 0, 0, 0.55);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #14171a;
+  --bg-inset: #0f1113;
+  --paper: #1b1f22;
+  --ink: #ecebe4;
+  --ink-soft: #aab0ab;
+  --ink-faint: #767e78;
+  --line: #2e332f;
+  --line-strong: #3d4340;
+  --accent: #d9b968;
+  --accent-ink: #f0dca4;
+  --accent-soft: #33301f;
+  --accent-contrast: #1a1608;
+  --locked: #e08249;
+  --locked-soft: #3a2417;
+  --ready: #5cc491;
+  --ready-soft: #16301f;
+  --released: #86aed4;
+  --released-soft: #1b2733;
+  --danger: #e0725f;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 12px 32px -14px rgba(0, 0, 0, 0.55);
+}

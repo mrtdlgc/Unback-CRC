@@ -1,0 +1,16 @@
+{
+  "name": "circles-backing-ledger",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Look up and withdraw a Circles CRC backing position on Gnosis Chain. Static site, no build step, no dependencies.",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "start": "node scripts/dev.js",
+    "test": "node tests/run.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
+}
