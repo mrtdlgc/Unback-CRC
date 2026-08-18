@@ -42,6 +42,13 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // Vercel platform routes exist only on the deployed site. Answer them here so
+  // the SPA fallback below cannot hand back HTML for something asked for as JS.
+  if ((req.url || "").startsWith("/_vercel/")) {
+    res.writeHead(404).end("Not found");
+    return;
+  }
+
   try {
     const info = await stat(filePath).catch(() => null);
     if (info?.isDirectory()) filePath = join(filePath, "index.html");

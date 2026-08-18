@@ -5,7 +5,6 @@
  * to sign one of the withdrawal steps.
  */
 
-import { inject } from "@vercel/analytics";
 import { isAddress, shorten } from "./abi/codec.js";
 import { PositionStatus, loadPosition } from "./chain/backing.js";
 import {
@@ -211,7 +210,6 @@ function handleConnectClick() {
 // ---------------------------------------------------------------------------
 
 function init() {
-  inject();
   initTheme(byId("themeToggle"));
   initWithdraw({ onPositionReload: reloadCurrentPosition });
 
